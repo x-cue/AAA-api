@@ -13,7 +13,7 @@ async function checkWhitelist(player) {
     IF(
         (SELECT setting_value FROM settings WHERE setting_key = 'whitelist_enabled') = 'true', 
         COUNT(whitelist.player) > 0, 
-        0
+        1
     ) AS is_whitelisted
 FROM 
     whitelist
