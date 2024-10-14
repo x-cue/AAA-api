@@ -4,16 +4,16 @@ const PORT = process.env.PORT || 8080
 const app = express()
 const db = require("./src/db")
 
-// Install json parser
-app.use(express.json())
+// Setup middleware
+const middleware = require("./src/middleware")
+app.use(middleware)
 
 // Default route to test connectivity
 app.get("/api/", (req, res) => res.send("Hello World!"))
 
-//#region Routes
-const statisticsRoutes = require("./src/routes/statistics")
-app.use("/api/statistics", statisticsRoutes)
-//#endregion Routes
+// Setup routes
+const routes = require("./src/routes")
+app.use("/api", routes)
 
 // Start listening to incoming requests
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
