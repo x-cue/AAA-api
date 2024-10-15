@@ -1,4 +1,5 @@
 const db = require("../db/statistics")
+const util = require("../lib/util")
 
 module.exports = {
   /**
@@ -12,7 +13,9 @@ module.exports = {
     }
 
     try {
-      await db.createServerJoin(player, server)
+      const ip = util.getIpFromRequest(req)
+
+      await db.createServerJoin(player, server, ip)
       return res.status(201).json({ message: "Server join recorded." })
     } catch (err) {
       console.error("Error recording server join: ", err)
@@ -32,8 +35,10 @@ module.exports = {
       return res.status(400).json({ error: "Player is required." })
     }
 
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress
+
     try {
-      const isWhitelisted = await db.checkWhitelist(player)
+      const isWhitelisted = await db.checkWhitelist(player, ip)
 
       return res.status(200).json({ isWhitelisted })
     } catch (err) {
